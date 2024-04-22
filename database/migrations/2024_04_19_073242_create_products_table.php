@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('sale_percent')->nullable()->default(0);
             $table->bigInteger('price');
             $table->integer('quantity');
+            $table->string('image');
             $table->tinyInteger('trending')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
