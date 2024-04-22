@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sub_category_id');
             $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
             $table->unsignedBigInteger('brand_id');
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('set null');
 
             $table->string('slug');
             $table->string('name');
