@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('brand_id');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('set null');
 
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('name');
             $table->longText('description');
             $table->integer('sale_percent')->nullable()->default(0);
