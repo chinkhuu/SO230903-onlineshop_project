@@ -55,4 +55,13 @@ Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
         Route::get('subcategory/delete/{id}', 'destroy');
     });
 
+    Route::controller(\App\Http\Controllers\Admin\ProductController::class)->group(function () {
+        Route::get('product', 'index');
+        Route::get('product/create', 'create');
+        Route::post('product', 'store');
+        Route::get('product/edit/{id}', 'edit');
+        Route::put('product/{id}', 'update');
+        Route::get('product/delete/{id}', 'destroy');
+    });
+
 });

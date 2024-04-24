@@ -28,5 +28,13 @@
             </a>
         </li>
 
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('admin/product') }}">
+                <i class="mdi mdi-sale menu-icon"></i>
+                <span class="menu-title">Product</span>
+            </a>
+        </li>
+
     </ul>
 </nav>
