@@ -95,10 +95,10 @@
 
                             <hr>
 
-{{--                            <div class="mb-3">--}}
-{{--                                <label>Upload Product Images</label><br><br>--}}
-{{--                                <input type="file" class="form-control" name="picture[]" multiple/>--}}
-{{--                            </div>--}}
+                            <div class="mb-3">
+                                <label>Upload Product Images</label>
+                                <input type="file" class="form-control" name="picture[]" multiple/>
+                            </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">

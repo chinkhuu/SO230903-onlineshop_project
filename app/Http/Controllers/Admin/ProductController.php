@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -39,6 +40,7 @@ class ProductController extends Controller
             'image' => 'required|image',
             'status' => 'nullable',
             'trending' => 'nullable',
+            'picture.*' => 'nullable|image',
         ]);
 
         if($request->hasFile('image')){
@@ -67,6 +69,22 @@ class ProductController extends Controller
         ]);
 
 
+        if($request->hasFile('picture')){
+            $uploadPath = 'uploads/product/picture/';
+
+            $i = 1;
+            foreach($request->file('picture') as $imageFile){
+                $extension = $imageFile->getClientOriginalExtension();
+                $filename = time().$i++.'.'.$extension;
+                $imageFile->move($uploadPath,$filename);
+                $finalImagePathName = $uploadPath.$filename;
+
+                $product->productImages()->create([
+                    'product_id' => $product->id,
+                    'image' => $finalImagePathName
+                ]);
+            }
+        }
 
         return redirect('admin/product')->with('message', 'Product Added Successfully!');
     }
@@ -131,5 +149,50 @@ class ProductController extends Controller
         }
         return redirect('admin/product')->with('message', 'Something went wrong!');
     }
+
+
+    public function showImage($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return view('admin.product.image', compact('product'));
+    }
+
+    public function postImage(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        if($request->hasFile('image')){
+            $uploadPath = 'uploads/product/picture/';
+
+            $i = 1;
+            foreach($request->file('image') as $file){
+                $extension = $file->getClientOriginalExtension();
+                $filename = time().$i++.'.'.$extension;
+                $file->move($uploadPath,$filename);
+                $finalPathName = $uploadPath.$filename;
+
+                $product->productImages()->create([
+                    'product_id' => $product->id,
+                    'image' => $finalPathName
+                ]);
+            }
+        }
+        return redirect()->back()->with('message','Data амжилттай хуулагдлаа');
+    }
+
+    public function removeImage($id)
+    {
+        $productImage = ProductImage::findOrFail($id);
+
+        if(File::exists($productImage->file)){
+            File::delete($productImage->file);
+        }
+        $productImage->delete();
+        return redirect()->back()->with('message','Data амжилттай устлаа');
+
+    }
+
+
 
 }

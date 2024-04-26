@@ -55,6 +55,11 @@
                                 <td>{{$item->created_at}}</td>
 
                                 <td>
+                                    <a href="{{ url('admin/product/image/'.$item->id) }}"
+                                       class="btn btn-info btn-sm" title="image">
+                                        Images
+                                    </a>
+
                                     <a href="{{ url('admin/product/edit/' . $item->id) }}"
                                        class="btn btn-success btn-sm">
                                         Edit
