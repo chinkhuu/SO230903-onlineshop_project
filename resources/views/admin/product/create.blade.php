@@ -7,7 +7,8 @@
                 <div class="card-header">
                     <h3>
                         Add Product
-                        <a href="{{ url('admin/product') }}" class="btn btn-primary btn-sm text-white float-end">BACK</a>
+                        <a href="{{ url('admin/product') }}"
+                           class="btn btn-primary btn-sm text-white float-end">BACK</a>
                     </h3>
                 </div>
 
@@ -75,26 +76,34 @@
                                 <input type="number" name="quantity"
                                        class="form-control"
                                        value="{{ old('quantity') }}"
-                                       min="1" >
+                                       min="1">
                                 @error('quantity') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label for="description">Description</label>
-                                <textarea id="description" name="description" class="form-control" rows="4">{{ old('description') }}</textarea>
+                                <textarea id="description" name="description" class="form-control"
+                                          rows="4">{{ old('description') }}</textarea>
                                 @error('description') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
 
                             <div class="col-md-12 mb-3">
                                 <label for="image">Image</label>
-                                <input type="file" name="image" class="form-control" >
+                                <input type="file" name="image" class="form-control">
                                 @error('image') <small class="text-danger">{{ $message }}</small> @enderror
                             </div>
+
+                            <hr>
+
+{{--                            <div class="mb-3">--}}
+{{--                                <label>Upload Product Images</label><br><br>--}}
+{{--                                <input type="file" class="form-control" name="picture[]" multiple/>--}}
+{{--                            </div>--}}
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="trending">Trending</label>
-                                    <input type="checkbox" name="trending" value="{{old('trending')}}">
+                                    <input type="checkbox" name="trending">
                                     (Checked = Private, Unchecked = Public)
                                     @error('trending') <small class="text-danger">{{ $message }}</small> @enderror
                                 </div>
@@ -103,7 +112,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="status">Status</label>
-                                    <input type="checkbox" name="status" value="{{old('status')}}">
+                                    <input type="checkbox" name="status">
                                     (Checked = Private, Unchecked = Public)
                                     @error('status') <small class="text-danger">{{ $message }}</small> @enderror
                                 </div>

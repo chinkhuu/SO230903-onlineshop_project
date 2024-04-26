@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -26,7 +27,6 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-//        dd($request->all());
         $validatedData = $request->validate([
             'subcategory' => 'required|exists:sub_categories,id',
             'brand' => 'required|exists:brands,id',
@@ -52,7 +52,7 @@ class ProductController extends Controller
         $validatedData['status'] = $request->status == true ? '1':'0';
         $validatedData['trending'] = $request->status == true ? '1':'0';
 
-        Product::create([
+        $product = Product::create([
             'sub_category_id' => $validatedData['subcategory'],
             'brand_id' => $validatedData['brand'],
             'name' => $validatedData['name'],
@@ -66,11 +66,70 @@ class ProductController extends Controller
             'trending' => $validatedData['trending']
         ]);
 
+
+
         return redirect('admin/product')->with('message', 'Product Added Successfully!');
     }
 
-    public function edit()
+    public function edit($id)
     {
-
+        $product = Product::findOrFail($id);
+        $subcategories = SubCategory::all();
+        $brands = Brand::all();
+        return view('admin.product.edit', compact('product','subcategories','brands'));
     }
+
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'sub_category_id' => 'required|exists:sub_categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'name' => 'required|string|max:255|unique:products,name,' . $id,
+            'slug' => 'required|string|max:255|unique:products,slug,' . $id,
+            'price' => 'required|integer',
+            'sale_percent' => 'required|integer|min:0|max:100',
+            'quantity' => 'required|integer|min:0',
+            'description' => 'required|string',
+            'image' => 'sometimes|image',
+        ]);
+
+        if ($request->hasFile('image')) {
+
+            if(File::exists($product->image)) {
+                File::delete($product->image);
+            }
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $ext;
+            $file->move('uploads/product/', $filename);
+            $validatedData['image'] = 'uploads/product/' . $filename;
+        }
+
+        $validatedData['status'] = $request->status == true ? '1' : '0';
+        $validatedData['trending'] = $request->trending == true ? '1' : '0';
+
+        $product->update($validatedData);
+
+        return redirect('admin/product')->with('message', 'Product Updated Successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+
+        if($product){
+            $destination = $product->image;
+            if(File::exists($destination))
+            {
+                File::delete($destination);
+            }
+
+            $product->delete();
+            return redirect('admin/product')->with('message', 'Product Deleted Successfully!');
+        }
+        return redirect('admin/product')->with('message', 'Something went wrong!');
+    }
+
 }
