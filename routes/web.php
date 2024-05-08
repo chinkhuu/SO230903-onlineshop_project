@@ -13,17 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
-//Route::get('admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class,'index']);
-
+Route::controller(\App\Http\Controllers\Frontend\FrontendController::class)->group(function () {
+    Route::get('/','index')->name('index');
+    Route::get('shop','shop')->name('frontend.shop');
+});
 
 Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
@@ -68,4 +65,12 @@ Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
         Route::get('product/image/delete/{id}', 'removeImage');
     });
 
+    Route::controller(\App\Http\Controllers\Admin\SliderController::class)->group(function () {
+        Route::get('slider', 'index');
+        Route::get('slider/create', 'create');
+        Route::post('slider', 'store');
+        Route::get('slider/edit/{id}', 'edit');
+        Route::put('slider/{id}', 'update');
+        Route::get('slider/delete/{id}', 'destroy');
+    });
 });
