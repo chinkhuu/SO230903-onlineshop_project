@@ -19,7 +19,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::controller(\App\Http\Controllers\Frontend\FrontendController::class)->group(function () {
     Route::get('/','index')->name('index');
-    Route::get('shop','shop')->name('frontend.shop');
+    Route::get('products','products')->name('frontend.products');
+    Route::get('product/{slug}','productShow')->name('frontend.product.show');
+
+    Route::get('product-add-cart','productAddCart')->name('frontend.product.add.cart')
+        ->middleware('auth');
 });
 
 Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {

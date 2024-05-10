@@ -54,7 +54,7 @@
                 <nav class="header__menu mobile-menu">
                     <ul>
                         <li class="active"><a href="{{route('index')}}">Home</a></li>
-                        <li><a href="{{route('frontend.shop')}}">Shop</a></li>
+                        <li><a href="{{route('frontend.products')}}">Shop</a></li>
 
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
@@ -66,12 +66,12 @@
                             </ul>
                         </li>
 
-                        <li><a href="#">Categories</a>
+                        <li>
+                            <a href="#">Categories</a>
                             <ul class="dropdown">
                                 @foreach($categories as $category)
                                     <li><a href="">{{$category->name}}</a></li>
                                 @endforeach
-
                             </ul>
                         </li>
 
@@ -85,7 +85,8 @@
                     <a href="#"><img src="{{asset('assets/img/icon/heart.png')}}" alt=""></a>
 
                     <a href="#"><img src="{{asset('assets/img/icon/cart.png')}}" alt=""> <span>0</span></a>
-                    <div class="price">$0.00</div>
+
+                    <a href="#"><img src="{{asset('assets/img/icon/profile.png')}}" alt=""></a>
                 </div>
             </div>
         </div>
