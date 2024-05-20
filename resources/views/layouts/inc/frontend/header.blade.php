@@ -1,3 +1,49 @@
+<style>
+    .profile-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .profile-dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 10;
+    }
+
+    .profile-dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .profile-dropdown-content a:hover {background-color: #f1f1f1}
+
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var profileTrigger = document.querySelector('.profile-trigger');
+        var dropdownContent = document.querySelector('.profile-dropdown-content');
+
+        profileTrigger.onclick = function(event) {
+            event.stopPropagation();
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        };
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-trigger')) {
+                if (dropdownContent.style.display === 'block') {
+                    dropdownContent.style.display = 'none';
+                }
+            }
+        };
+    });
+
+</script>
 <!-- Offcanvas Menu Begin -->
 <div class="offcanvas-menu-overlay"></div>
 <div class="offcanvas-menu-wrapper">
@@ -84,9 +130,27 @@
                     <a href="#" class="search-switch"><img src="{{asset('assets/img/icon/search.png')}}" alt=""></a>
                     <a href="#"><img src="{{asset('assets/img/icon/heart.png')}}" alt=""></a>
 
-                    <a href="#"><img src="{{asset('assets/img/icon/cart.png')}}" alt=""> <span>0</span></a>
+                    <a href="{{route('frontend.carts')}}"><img src="{{asset('assets/img/icon/cart.png')}}" alt=""></a>
 
-                    <a href="#"><img src="{{asset('assets/img/icon/profile.png')}}" alt=""></a>
+                    <div class="profile-dropdown">
+                        <a href="#" class="profile-trigger"><img src="{{asset('assets/img/icon/profile.png')}}" alt=""></a>
+                        <div class="profile-dropdown-content" style="display: none;">
+                            @guest()
+                                <a href="{{route('login')}}">login</a>
+                                <a href="{{route('register')}}">register</a>
+                            @else
+                                <a href="{{route('frontend.orders')}}">orders</a>
+                                <a href="{{route('frontend.carts')}}">carts</a>
+                                <a href="">wishlish</a>
+
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                    <i class="fa fa-sign-out"></i> {{ __('Logout') }}
+                                </a>
+                            @endguest
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

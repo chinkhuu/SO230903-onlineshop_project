@@ -69,14 +69,18 @@
                                 with placket.</p>
 
                             <div class="product__details__cart__option">
-                                <div class="quantity">
-                                    <div class="pro-qty">
-                                        <input type="number" name="quantity" value="1"
-                                               min="1" max="{{$product->quantity}}">
+                                <form method="POST" action="{{ route('frontend.add-cart', ['id' => $product->id]) }}">
+                                    @csrf
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <input type="number" name="quantity" value="1" min="1" max="{{ $product->quantity }}">
+                                        </div>
                                     </div>
-                                </div>
-                                <button href="#" class="primary-btn">add to cart</button>
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit" class="primary-btn">Add to Cart</button>
+                                </form>
                             </div>
+
 
                             <div class="product__details__btns__option">
                                 <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>

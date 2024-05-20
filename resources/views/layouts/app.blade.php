@@ -54,5 +54,38 @@
 <script src="{{asset('assets/js/main.js')}}"></script>
 
 @yield('script')
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+    <script>
+        Swal.fire({
+            title: "Good job!",
+            text: "{{session('success')}}",
+            icon: "success"
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "{{session('error')}}!",
+        });
+    </script>
+@endif
+
+@if(session('message'))
+    <script>
+        Swal.fire({
+            title: "Success!",
+            text: "{{session('message')}}",
+            icon: "success"
+        });
+    </script>
+@endif
+
 </body>
 </html>

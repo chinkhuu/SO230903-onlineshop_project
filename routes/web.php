@@ -24,6 +24,16 @@ Route::controller(\App\Http\Controllers\Frontend\FrontendController::class)->gro
 
     Route::get('product-add-cart','productAddCart')->name('frontend.product.add.cart')
         ->middleware('auth');
+
+    Route::get('orders','orders')->name('frontend.orders');
+//    Route::get('carts','carts')->name('frontend.carts');
+});
+
+Route::controller(\App\Http\Controllers\Frontend\CartController::class)->middleware('auth')->group(function () {
+    Route::get('cart','index')->name('frontend.carts');
+    Route::post('add-cart/{id}', 'store')->name('frontend.add-cart');
+    Route::post('update-cart', 'update')->name('frontend.update-cart');
+    Route::post('remove-cart', 'destroy')->name('frontend.remove-cart');
 });
 
 Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
