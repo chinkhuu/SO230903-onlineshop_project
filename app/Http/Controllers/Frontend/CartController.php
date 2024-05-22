@@ -13,8 +13,23 @@ class CartController extends Controller
     public function index()
     {
         $user = Auth::user();
+
         $cart_data = Cart::where('user_id', $user->id)->get();
-        return view('frontend.cart', compact('cart_data'));
+
+        if ($cart_data->count() > 0)
+        {
+            $total_price = $cart_data->sum(function($item) {
+                return $item->quantity * $item->product->price * (1 - $item->product->sale_percent / 100);
+            });
+
+            return view('frontend.cart', compact('cart_data', 'total_price'));
+        }
+        else
+        {
+            return redirect()->back()->with('error', 'Your cart is empty');
+        }
+
+
     }
 
     public function store(Request $request, $id)
@@ -76,13 +91,16 @@ class CartController extends Controller
 
         $totalPrice = $cartItem->quantity * $product->price * (1 - $product->sale_percent / 100);
 
+        $totalCartPrice = Cart::where('user_id', Auth::id())->get()->sum(function($item) {
+            return $item->quantity * $item->product->price * (1 - $item->product->sale_percent / 100);
+        });
+
         return response()->json([
             'success' => true,
-            'totalPrice' => $totalPrice
+            'totalPrice' => $totalPrice,
+            'cartTotal' => $totalCartPrice
         ]);
     }
-
-
 
     public function destroy(Request $request)
     {
@@ -93,7 +111,14 @@ class CartController extends Controller
         $cartItem = Cart::findOrFail($request->id);
         $cartItem->delete();
 
-        return response()->json(['success' => true]);
+        $totalCartPrice = Cart::where('user_id', Auth::id())->get()->sum(function($item) {
+            return $item->quantity * $item->product->price * (1 - $item->product->sale_percent / 100);
+        });
+
+        return response()->json([
+            'success' => true,
+            'cartTotal' => $totalCartPrice
+        ]);
     }
 
 }
