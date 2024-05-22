@@ -71,6 +71,13 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 text-right">
+                            <h4>Total: <span id="cart-total">{{ $total_price }}₮</span></h4>
+                            <a href="{{ route('checkout') }}" class="primary-btn">Proceed to Checkout</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -80,64 +87,80 @@
 
 @section('script')
     <script>
-        var proQty = $('.pro-qty-2');
-        proQty.prepend('<span class="fa fa-angle-left dec qtybtn"></span>');
-        proQty.append('<span class="fa fa-angle-right inc qtybtn"></span>');
-
-        proQty.on('click', '.qtybtn', function () {
-            var $button = $(this);
-            var $input = $button.parent().find('input');
-            var oldValue = parseInt($input.val());
-            var maxVal = parseInt($input.attr('max'));
-            var newVal;
-
-            if ($button.hasClass('inc')) {
-                newVal = oldValue < maxVal ? oldValue + 1 : maxVal;
-            } else {
-                newVal = oldValue > 1 ? oldValue - 1 : 1;
-            }
-
-            $input.val(newVal).trigger('change');
-        });
-
-        $('.quantity-input').on('change', function() {
-            var $row = $(this).closest('tr');
-            var id = $row.data('id');
-            var quantity = $(this).val();
-
-            $.ajax({
-                url: '{{ route('frontend.update-cart') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: id,
-                    quantity: quantity
-                },
-                success: function(response) {
-                    if(response.success) {
-                        $row.find('.total-price').text(response.totalPrice + '₮');
-                    }
-                }
+        function calculateCartTotal() {
+            let total = 0;
+            $('.total-price').each(function() {
+                let price = parseFloat($(this).text().replace('₮', ''));
+                total += price;
             });
-        });
+            $('#cart-total').text(total + '₮');
+        }
 
-        $('.remove-item').on('click', function() {
-            var $row = $(this).closest('tr');
-            var id = $row.data('id');
+        $(document).ready(function() {
+            var proQty = $('.pro-qty-2');
+            proQty.prepend('<span class="fa fa-angle-left dec qtybtn"></span>');
+            proQty.append('<span class="fa fa-angle-right inc qtybtn"></span>');
 
-            $.ajax({
-                url: '{{ route('frontend.remove-cart') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    id: id
-                },
-                success: function(response) {
-                    if(response.success) {
-                        $row.remove();
-                    }
+            proQty.on('click', '.qtybtn', function () {
+                var $button = $(this);
+                var $input = $button.parent().find('input');
+                var oldValue = parseInt($input.val());
+                var maxVal = parseInt($input.attr('max'));
+                var newVal;
+
+                if ($button.hasClass('inc')) {
+                    newVal = oldValue < maxVal ? oldValue + 1 : maxVal;
+                } else {
+                    newVal = oldValue > 1 ? oldValue - 1 : 1;
                 }
+
+                $input.val(newVal).trigger('change');
             });
+
+            $('.quantity-input').on('change', function() {
+                var $row = $(this).closest('tr');
+                var id = $row.data('id');
+                var quantity = $(this).val();
+
+                $.ajax({
+                    url: '{{ route('frontend.update-cart') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id,
+                        quantity: quantity
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            $row.find('.total-price').text(response.totalPrice + '₮');
+                            calculateCartTotal();
+                        }
+                    }
+                });
+            });
+
+            $('.remove-item').on('click', function() {
+                var $row = $(this).closest('tr');
+                var id = $row.data('id');
+
+                $.ajax({
+                    url: '{{ route('frontend.remove-cart') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        id: id
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            $row.remove();
+                            calculateCartTotal();
+                        }
+                    }
+                });
+            });
+
+            calculateCartTotal();
         });
+
     </script>
 @endsection
