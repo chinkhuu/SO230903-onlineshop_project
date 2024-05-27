@@ -139,7 +139,7 @@
                                 <a href="{{route('login')}}">login</a>
                                 <a href="{{route('register')}}">register</a>
                             @else
-                                <a href="{{route('frontend.orders')}}">orders</a>
+                                <a href="{{route('orders')}}">orders</a>
                                 <a href="{{route('frontend.carts')}}">carts</a>
                                 <a href="">wishlish</a>
 

@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,9 +23,6 @@ Route::controller(\App\Http\Controllers\Frontend\FrontendController::class)->gro
 
     Route::get('product-add-cart','productAddCart')->name('frontend.product.add.cart')
         ->middleware('auth');
-
-    Route::get('orders','orders')->name('frontend.orders');
-//    Route::get('carts','carts')->name('frontend.carts');
 });
 
 Route::controller(\App\Http\Controllers\Frontend\CartController::class)->middleware('auth')->group(function () {
@@ -34,6 +30,16 @@ Route::controller(\App\Http\Controllers\Frontend\CartController::class)->middlew
     Route::post('add-cart/{id}', 'store')->name('frontend.add-cart');
     Route::post('update-cart', 'update')->name('frontend.update-cart');
     Route::post('remove-cart', 'destroy')->name('frontend.remove-cart');
+});
+
+Route::controller(\App\Http\Controllers\Frontend\CheckoutController::class)->middleware('auth')->group(function () {
+    Route::get('checkout', 'index')->name('checkout');
+    Route::post('checkout', 'store')->name('checkout-store');
+});
+
+Route::controller(\App\Http\Controllers\Frontend\OrderController::class)->middleware('auth')->group(function () {
+    Route::get('orders', 'index')->name('orders');
+    Route::get('order/{order}', 'show')->name('order.show');
 });
 
 Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
@@ -87,4 +93,5 @@ Route::prefix('admin')->middleware('auth', 'isAdmin')->group(function () {
         Route::put('slider/{id}', 'update');
         Route::get('slider/delete/{id}', 'destroy');
     });
+
 });
